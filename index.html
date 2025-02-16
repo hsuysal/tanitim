@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üniversite Program Arama</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+        select {
+            background: white;
+            color: black;
+            cursor: pointer;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            display: none;
+        }
+        .result p {
+            margin: 8px 0;
+        }
+        .program-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+        .program-list-container ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .program-list-container li {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 16px;
+            color: white;
+            word-wrap: break-word;
+            white-space: normal;
+}
+.search-container {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+}
+.search-container input {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0;
+}
+        .program-list-container li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Üniversite Program Arama</h2>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Program adı ile arama yapın..." style="width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px;">
+        <div id="searchResults" class="program-list-container" style="display: none; margin-top: 10px;">
+            <h3>Arama Sonuçları</h3>
+            <ul id="resultsList"></ul>
+        </div>
+    </div>
+
+    <label for="degree">Eğitim Düzeyi Seçiniz:</label>
+    <select id="degree">
+        <option value="">-- Seçiniz --</option>
+        <option value="Tüm Programlar">Tüm Programlar</option>
+        <option value="Lisans">Lisans</option>
+        <option value="Ön lisans">Ön Lisans</option>
+    </select>
+
+    <label for="faculty">Fakülte/Yüksekokul Seçiniz:</label>
+    <select id="faculty" disabled>
+        <option value="">-- Önce Eğitim Düzeyi Seçiniz --</option>
+    </select>
+
+    <label for="program">Program Seçiniz:</label>
+    <select id="program" disabled>
+        <option value="">-- Önce Fakülte Seçiniz --</option>
+    </select>
+
+    <button onclick="showInfo()">Bilgileri Getir</button>
+
+    <div class="result" id="infoBox">
+        <h3>Program Bilgileri</h3>
+        <p><strong>Fakülte/Yüksekokul:</strong> <span id="facultyName"></span></p>
+        <p><strong>Program:</strong> <span id="programName"></span></p>
+        <p><strong>Puan Türü:</strong> <span id="scoreType"></span></p>
+        <p><strong>Kontenjan:</strong> <span id="quota"></span></p>
+        <p><strong>Yerleşen:</strong> <span id="placed"></span></p>
+        <p><strong>Taban Puan:</strong> <span id="minScore"></span></p>
+        <p><strong>Tavan Puan:</strong> <span id="maxScore"></span></p>
+    </div>
+</div>
+
+<script>
+    // Add search functionality
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const resultsList = document.getElementById('resultsList');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        if (searchTerm.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        const filteredPrograms = data.filter(item => 
+            item["Program Adı"].toLowerCase().includes(searchTerm)
+        );
+
+        resultsList.innerHTML = '';
+        if (filteredPrograms.length > 0) {
+            filteredPrograms.forEach(program => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${program["Program Adı"]}</strong><br>
+                    Fakülte: ${program["Fakülte/Yüksekokul Adı"]}<br>
+                    Eğitim Düzeyi: ${program["Program"]}
+                `;
+                resultsList.appendChild(li);
+            });
+            searchResults.style.display = 'block';
+        } else {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    const data = [
+
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Bilgisayar ve Bilişim Fakültesi",
+          "Program Adı": "Bilişim Sistemleri Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 303.42595,
+          "Tavan Puan": 352.43485
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Bilgisayar ve Bilişim Fakültesi",
+          "Program Adı": "Yazılım Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 80,
+          "Yerleşen": 82,
+          "Taban Puan": 334.32045,
+          "Tavan Puan": 383.42222
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak İşletme Fakültesi",
+          "Program Adı": "Ekonomi ve Finans",
+          "Puan Türü": "EA",
+          "Kontenjan": 55,
+          "Yerleşen": 57,
+          "Taban Puan": 231.77305,
+          "Tavan Puan": 288.07946
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak İşletme Fakültesi",
+          "Program Adı": "Halkla İlişkiler ve Tanıtım",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 65,
+          "Yerleşen": 67,
+          "Taban Puan": 264.22594,
+          "Tavan Puan": 361.21047
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak İşletme Fakültesi",
+          "Program Adı": "İşletme",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 236.62989,
+          "Tavan Puan": 283.63687
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Sağlık Yüksekokulu",
+          "Program Adı": "Acil Yardım ve Afet Yönetimi",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 245.27647,
+          "Tavan Puan": 275.07411
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Sağlık Yüksekokulu",
+          "Program Adı": "Çocuk Gelişimi",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 60,
+          "Taban Puan": 308.79613,
+          "Tavan Puan": 332.263
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Sağlık Yüksekokulu",
+          "Program Adı": "Ebelik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 55,
+          "Yerleşen": 55,
+          "Taban Puan": 310.39626,
+          "Tavan Puan": 322.46093
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Sağlık Yüksekokulu",
+          "Program Adı": "Hemşirelik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 80,
+          "Yerleşen": 80,
+          "Taban Puan": 323.24729,
+          "Tavan Puan": 351.95199
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu",
+          "Program Adı": "Bilişim Sistemleri ve Teknolojileri",
+          "Puan Türü": "SAY",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 279.05906,
+          "Tavan Puan": 302.98627
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu",
+          "Program Adı": "Gümrük İşletme",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 61,
+          "Taban Puan": 258.45346,
+          "Tavan Puan": 289.25088
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu",
+          "Program Adı": "Muhasebe ve Finans Yönetimi",
+          "Puan Türü": "EA",
+          "Kontenjan": 55,
+          "Yerleşen": 57,
+          "Taban Puan": 232.25115,
+          "Tavan Puan": 274.75964
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu",
+          "Program Adı": "Yönetim Bilişim Sistemleri",
+          "Puan Türü": "EA",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 320.01183,
+          "Tavan Puan": 348.28725
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Diş Hekimliği Fakültesi",
+          "Program Adı": "Diş Hekimliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 445.84068,
+          "Tavan Puan": 458.29457
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Fen Bilgisi Öğretmenliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 0,
+          "Taban Puan": "--",
+          "Tavan Puan": "--"
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "İlköğretim Matematik Öğretmenliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 50,
+          "Yerleşen": 15,
+          "Taban Puan": 291.35453,
+          "Tavan Puan": 378.75911
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "İngilizce Öğretmenliği",
+          "Puan Türü": "DİL",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 410.58651,
+          "Tavan Puan": 440.14986
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Okul Öncesi Öğretmenliği",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 408.01197,
+          "Tavan Puan": 426.73429
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Özel Eğitim Öğretmenliği",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 40,
+          "Yerleşen": 40,
+          "Taban Puan": 427.43663,
+          "Tavan Puan": 460.27597
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Rehberlik ve Psikolojik Danışmanlık",
+          "Puan Türü": "EA",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 343.7044,
+          "Tavan Puan": 356.20238
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Sınıf Öğretmenliği",
+          "Puan Türü": "EA",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 350.42105,
+          "Tavan Puan": 360.8217
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Sosyal Bilgiler Öğretmenliği",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 350.13845,
+          "Tavan Puan": 384.87052
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Eğitim Fakültesi",
+          "Program Adı": "Türkçe Öğretmenliği",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 387.9321,
+          "Tavan Puan": 419.6269
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Antropoloji",
+          "Puan Türü": "EA",
+          "Kontenjan": 20,
+          "Yerleşen": 21,
+          "Taban Puan": 247.87081,
+          "Tavan Puan": 271.00087
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Arkeoloji",
+          "Puan Türü": "EA",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 227.66226,
+          "Tavan Puan": 299.69085
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Biyoloji",
+          "Puan Türü": "SAY",
+          "Kontenjan": 25,
+          "Yerleşen": 26,
+          "Taban Puan": 254.07663,
+          "Tavan Puan": 272.91083
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Coğrafya",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 289.5111,
+          "Tavan Puan": 354.62174
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Felsefe",
+          "Puan Türü": "EA",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 226.56481,
+          "Tavan Puan": 313.7815
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "İngiliz Dili ve Edebiyatı (İngilizce)",
+          "Puan Türü": "DİL",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 379.32207,
+          "Tavan Puan": 434.95948
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "İspanyol Dili ve Edebiyatı",
+          "Puan Türü": "DİL",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 352.54817,
+          "Tavan Puan": 407.87108
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Kimya",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 261.28288,
+          "Tavan Puan": 279.77572
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Matematik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 277.12787,
+          "Tavan Puan": 315.57589
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Moleküler Biyoloji ve Genetik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 40,
+          "Yerleşen": 40,
+          "Taban Puan": 270.37945,
+          "Tavan Puan": 310.23321
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Nanobilim ve Nanoteknoloji",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 257.62326,
+          "Tavan Puan": 279.15573
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Nanobilim ve Nanoteknoloji (KKTC Uyruklu)",
+          "Puan Türü": "SAY",
+          "Kontenjan": 1,
+          "Yerleşen": 1,
+          "Taban Puan": 235.19995,
+          "Tavan Puan": 235.19995
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Sosyoloji",
+          "Puan Türü": "EA",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 239.30323,
+          "Tavan Puan": 275.99143
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Tarih",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 296.76413,
+          "Tavan Puan": 413.91915
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Fen-Edebiyat Fakültesi",
+          "Program Adı": "Türk Dili ve Edebiyatı",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 316.70288,
+          "Tavan Puan": 363.77506
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Uygulamalı Bilimler Yüksekokulu",
+          "Program Adı": "Bilişim Sistemleri ve Teknolojileri",
+          "Puan Türü": "SAY",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 275.49553,
+          "Tavan Puan": 286.47457
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Uygulamalı Bilimler Yüksekokulu",
+          "Program Adı": "Tapu Kadastro",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 264.74257,
+          "Tavan Puan": 303.8897
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "Finans ve Bankacılık",
+          "Puan Türü": "EA",
+          "Kontenjan": 80,
+          "Yerleşen": 82,
+          "Taban Puan": 239.08477,
+          "Tavan Puan": 269.12288
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "İktisat",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 239.95782,
+          "Tavan Puan": 281.38001
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "İşletme",
+          "Puan Türü": "EA",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 251.30349,
+          "Tavan Puan": 301.96922
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "Maliye",
+          "Puan Türü": "EA",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 245.43974,
+          "Tavan Puan": 283.29887
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "Sağlık Yönetimi",
+          "Puan Türü": "EA",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 262.20365,
+          "Tavan Puan": 295.75783
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "Siyaset Bilimi ve Kamu Yönetimi",
+          "Puan Türü": "EA",
+          "Kontenjan": 90,
+          "Yerleşen": 92,
+          "Taban Puan": 238.58319,
+          "Tavan Puan": 326.65788
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İktisadi ve İdari Bilimler Fakültesi",
+          "Program Adı": "Sosyal Hizmet",
+          "Puan Türü": "EA",
+          "Kontenjan": 65,
+          "Yerleşen": 66,
+          "Taban Puan": 274.19732,
+          "Tavan Puan": 310.11546
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İlahiyat Fakültesi",
+          "Program Adı": "İlahiyat",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 107,
+          "Yerleşen": 110,
+          "Taban Puan": 271.09815,
+          "Tavan Puan": 386.27563
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "İlahiyat Fakültesi",
+          "Program Adı": "İlahiyat (M.T.O.K.)",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 13,
+          "Yerleşen": 13,
+          "Taban Puan": 275.68327,
+          "Tavan Puan": 341.84168
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Bilgisayar Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 345.58727,
+          "Tavan Puan": 392.22362
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Elektrik-Elektronik Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 304.14874,
+          "Tavan Puan": 338.23018
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Endüstri Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 35,
+          "Yerleşen": 36,
+          "Taban Puan": 316.66582,
+          "Tavan Puan": 337.89087
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Makine Mühendisliği",
+          "Puan Türü": "SAY",
+          "Kontenjan": 25,
+          "Yerleşen": 26,
+          "Taban Puan": 302.96459,
+          "Tavan Puan": 325.72265
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Mimarlık",
+          "Puan Türü": "SAY",
+          "Kontenjan": 20,
+          "Yerleşen": 6,
+          "Taban Puan": 304.85415,
+          "Tavan Puan": 315.51766
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Mühendislik-Mimarlık Fakültesi",
+          "Program Adı": "Peyzaj Mimarlığı",
+          "Puan Türü": "SAY",
+          "Kontenjan": 65,
+          "Yerleşen": 67,
+          "Taban Puan": 246.4268,
+          "Tavan Puan": 282.22437
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sağlık Bilimleri Fakültesi",
+          "Program Adı": "Acil Yardım ve Afet Yönetimi",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 30,
+          "Taban Puan": 252.04823,
+          "Tavan Puan": 295.22542
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sağlık Bilimleri Fakültesi",
+          "Program Adı": "Beslenme ve Diyetetik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 30,
+          "Taban Puan": 290.44554,
+          "Tavan Puan": 389.26266
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sağlık Bilimleri Fakültesi",
+          "Program Adı": "Fizyoterapi ve Rehabilitasyon",
+          "Puan Türü": "SAY",
+          "Kontenjan": 65,
+          "Yerleşen": 65,
+          "Taban Puan": 283.10483,
+          "Tavan Puan": 303.96748
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sağlık Bilimleri Fakültesi",
+          "Program Adı": "Gerontoloji",
+          "Puan Türü": "SAY",
+          "Kontenjan": 30,
+          "Yerleşen": 30,
+          "Taban Puan": 264.31337,
+          "Tavan Puan": 301.15991
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sağlık Bilimleri Fakültesi",
+          "Program Adı": "Hemşirelik",
+          "Puan Türü": "SAY",
+          "Kontenjan": 120,
+          "Yerleşen": 120,
+          "Taban Puan": 329.63141,
+          "Tavan Puan": 392.47779
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Sanat ve Tasarım Fakültesi",
+          "Program Adı": "Görsel İletişim Tasarımı",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 65,
+          "Yerleşen": 67,
+          "Taban Puan": 299.83094,
+          "Tavan Puan": 354.52598
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Spor Bilimleri Fakültesi",
+          "Program Adı": "Spor Yöneticiliği",
+          "Puan Türü": "EA",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 255.02135,
+          "Tavan Puan": 309.39535
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Turizm Fakültesi",
+          "Program Adı": "Gastronomi ve Mutfak Sanatları",
+          "Puan Türü": "SÖZ",
+          "Kontenjan": 65,
+          "Yerleşen": 65,
+          "Taban Puan": 358.41375,
+          "Tavan Puan": 415.02634
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Turizm Fakültesi",
+          "Program Adı": "Turizm İşletmeciliği",
+          "Puan Türü": "EA",
+          "Kontenjan": 45,
+          "Yerleşen": 47,
+          "Taban Puan": 234.01577,
+          "Tavan Puan": 288.25884
+         },
+         {
+          "Program": "Lisans",
+          "Fakülte\/Yüksekokul Adı": "Veteriner Fakültesi",
+          "Program Adı": "Veteriner",
+          "Puan Türü": "SAY",
+          "Kontenjan": 110,
+          "Yerleşen": 110,
+          "Taban Puan": 359.70847,
+          "Tavan Puan": 424.3467
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Bankacılık ve Sigortacılık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 24453135,
+          "Tavan Puan": 33370677
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Bilgisayar Programcılığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 272.16983,
+          "Tavan Puan": 298.4078
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Bilişim Güvenliği Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 259.75074,
+          "Tavan Puan": 342.19755
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Büro Yönetimi ve Yönetici Asistanlığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 35,
+          "Yerleşen": 36,
+          "Taban Puan": 246.56955,
+          "Tavan Puan": 328.55961
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Mahkeme Büro Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 288.63986,
+          "Tavan Puan": 344.01984
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Maliye",
+          "Puan Türü": "TYT",
+          "Kontenjan": 45,
+          "Yerleşen": 47,
+          "Taban Puan": 235.19924,
+          "Tavan Puan": 296.71857
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Posta Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 230.3284,
+          "Tavan Puan": 290.76144
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Ağlasun Meslek Yüksekokulu",
+          "Program Adı": "Turizm ve Seyahat Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 240.18016,
+          "Tavan Puan": 294.80853
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Altınyayla Mehmet Tuğrul Güvenlik Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Acil Durum ve Afet Yönetimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 291.58874,
+          "Tavan Puan": 358.22127
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Altınyayla Mehmet Tuğrul Güvenlik Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Sivil Savunma ve İtfaiyecilik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 293.11526,
+          "Tavan Puan": 314.80775
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Alternatif Enerji Kaynakları Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 241.90457,
+          "Tavan Puan": 317.46525
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Bilgi Yönetimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 25,
+          "Yerleşen": 26,
+          "Taban Puan": 243.67477,
+          "Tavan Puan": 301.58471
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Bilgisayar Destekli Tasarım ve Animasyon",
+          "Puan Türü": "TYT",
+          "Kontenjan": 55,
+          "Yerleşen": 57,
+          "Taban Puan": 265.06076,
+          "Tavan Puan": 384.96753
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Biyomedikal Cihaz Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 273.20421,
+          "Tavan Puan": 310.53013
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Coğrafi Bilgi Sistemleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 235.44691,
+          "Tavan Puan": 272.32477
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Elektrik Enerjisi Üretim, İletim ve Dağıtımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 250.19572,
+          "Tavan Puan": 300.24192
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Grafik Tasarımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 80,
+          "Yerleşen": 82,
+          "Taban Puan": 262.32102,
+          "Tavan Puan": 379.52263
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Moda Tasarımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 249.62534,
+          "Tavan Puan": 354.66091
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Web Tasarımı ve Kodlama",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 271.50626,
+          "Tavan Puan": 363.98138
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Emin Gülmez Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Sağlık Bilgi Sistemleri Teknikerliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 262.43039,
+          "Tavan Puan": 305.26771
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Çocuk Gelişimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 80,
+          "Yerleşen": 80,
+          "Taban Puan": 279.06278,
+          "Tavan Puan": 326.00071
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Dış Ticaret",
+          "Puan Türü": "TYT",
+          "Kontenjan": 35,
+          "Yerleşen": 36,
+          "Taban Puan": 244.807,
+          "Tavan Puan": 314.39004
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Halkla İlişkiler ve Tanıtım",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 237.53135,
+          "Tavan Puan": 276.95738
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "İşletme Yönetimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 239.95172,
+          "Tavan Puan": 278.26558
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Lojistik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 241.99307,
+          "Tavan Puan": 291.01878
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Muhasebe ve Vergi Uygulamaları",
+          "Puan Türü": "TYT",
+          "Kontenjan": 45,
+          "Yerleşen": 47,
+          "Taban Puan": 247.08895,
+          "Tavan Puan": 298.1635
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Sivil Hava Ulaştırma İşletmeciliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 286.98161,
+          "Tavan Puan": 326.97011
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Bucak Hikmet Tolunay Meslek Yüksekokulu",
+          "Program Adı": "Sivil Havacılık Kabin Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 314.95018,
+          "Tavan Puan": 332.09512
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Aşçılık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 289.4228,
+          "Tavan Puan": 372.6275
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Bahçe Tarımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 238.97202,
+          "Tavan Puan": 315.39832
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Bitki Koruma",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 30,
+          "Taban Puan": 270.35784,
+          "Tavan Puan": 338.70507
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Gıda Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 254.33088,
+          "Tavan Puan": 333.63304
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Laborant ve Veteriner Sağlık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 51,
+          "Taban Puan": 305.88815,
+          "Tavan Puan": 356.47531
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Seracılık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 230.11211,
+          "Tavan Puan": 328.54841
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Süt ve Besi Hayvancılığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 234.65204,
+          "Tavan Puan": 279.12865
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Gıda Tarım ve Hayvancılık Meslek Yüksekokulu",
+          "Program Adı": "Süt ve Ürünleri Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 233.05046,
+          "Tavan Puan": 276.69844
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Ağız ve Diş Sağlığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 330.85382,
+          "Tavan Puan": 370.06137
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Ameliyathane Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 325.04919,
+          "Tavan Puan": 335.42836
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Anestezi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 60,
+          "Taban Puan": 350.57154,
+          "Tavan Puan": 384.3246
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Fizyoterapi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 318.68449,
+          "Tavan Puan": 360.85739
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Fizyoterapi (KKTC Uyruklu)",
+          "Puan Türü": "TYT",
+          "Kontenjan": 1,
+          "Yerleşen": 1,
+          "Taban Puan": 298.50007,
+          "Tavan Puan": 298.50007
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "İlk ve Acil Yardım",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 70,
+          "Taban Puan": 337.74862,
+          "Tavan Puan": 360.98022
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Burdur Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Ortopedik Protez ve Ortez",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 313.31167,
+          "Tavan Puan": 334.71438
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Çavdır Meslek Yüksekokulu",
+          "Program Adı": "İş Sağlığı ve Güvenliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 253.75873,
+          "Tavan Puan": 306.04426
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Çavdır Meslek Yüksekokulu",
+          "Program Adı": "Sosyal Hizmetler",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 254.13988,
+          "Tavan Puan": 288.20932
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Çavdır Meslek Yüksekokulu",
+          "Program Adı": "Yaşlı Bakımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 280.21488,
+          "Tavan Puan": 301.42298
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Bankacılık ve Sigortacılık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 55,
+          "Yerleşen": 57,
+          "Taban Puan": 244.353,
+          "Tavan Puan": 300.54063
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Bilgisayar Programcılığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 278.56656,
+          "Tavan Puan": 336.29246
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Elektrik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 258.62645,
+          "Tavan Puan": 307.68137
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Harita ve Kadastro",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 260.04797,
+          "Tavan Puan": 379.06144
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "İnternet ve Ağ Teknolojileri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 246.75553,
+          "Tavan Puan": 308.40879
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Maliye",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 238.40023,
+          "Tavan Puan": 283.21882
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Mimari Restorasyon",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 236.0576,
+          "Tavan Puan": 307.91054
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Ormancılık ve Orman Ürünleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 50,
+          "Taban Puan": 305.70008,
+          "Tavan Puan": 385.97394
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Sosyal Güvenlik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 246.55178,
+          "Tavan Puan": 302.66293
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Meslek Yüksekokulu",
+          "Program Adı": "Tapu ve Kadastro",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 51,
+          "Taban Puan": 273.01321,
+          "Tavan Puan": 391.30058
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Çocuk Gelişimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 274.63766,
+          "Tavan Puan": 338.50373
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Eczane Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 303.06533,
+          "Tavan Puan": 324.91949
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "İlk ve Acil Yardım",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 61,
+          "Taban Puan": 330.16415,
+          "Tavan Puan": 349.53502
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "İş ve Uğraşı Terapisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 284.92262,
+          "Tavan Puan": 337.14197
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Optisyenlik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 307.80424,
+          "Tavan Puan": 403.75595
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Gölhisar Sağlık Hizmetleri Meslek Yüksekokulu",
+          "Program Adı": "Tıbbi Dokümantasyon ve Sekreterlik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 319.54986,
+          "Tavan Puan": 340.45987
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Basım ve Yayım Teknolojileri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 55,
+          "Yerleşen": 57,
+          "Taban Puan": 236.60321,
+          "Tavan Puan": 281.62696
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Büro Yönetimi ve Yönetici Asistanlığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 253.98318,
+          "Tavan Puan": 315.93848
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Çağrı Merkezi Hizmetleri",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 251.32413,
+          "Tavan Puan": 311.13381
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Muhasebe ve Vergi Uygulamaları",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 61,
+          "Taban Puan": 251.49947,
+          "Tavan Puan": 313.98923
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Sağlık Kurumları İşletmeciliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 264.75812,
+          "Tavan Puan": 331.71006
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Sosyal Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Sivil Hava Ulaştırma İşletmeciliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 70,
+          "Yerleşen": 72,
+          "Taban Puan": 291.41169,
+          "Tavan Puan": 322.15279
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Tefenni Meslek Yüksekokulu",
+          "Program Adı": "İnsan Kaynakları Yönetimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 239.46968,
+          "Tavan Puan": 287.37948
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Tefenni Meslek Yüksekokulu",
+          "Program Adı": "Nüfus ve Vatandaşlık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 253.4935,
+          "Tavan Puan": 329.80291
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Tefenni Meslek Yüksekokulu",
+          "Program Adı": "Spor Yönetimi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 62,
+          "Taban Puan": 251.94948,
+          "Tavan Puan": 312.47496
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Bilgisayar Programcılığı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 60,
+          "Yerleşen": 61,
+          "Taban Puan": 303.22112,
+          "Tavan Puan": 366.38794
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Doğalgaz ve Tesisatı Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 241.44372,
+          "Tavan Puan": 352.44898
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Elektrik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 273.04161,
+          "Tavan Puan": 338.39227
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Hibrid ve Elektrikli Taşıtlar Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 40,
+          "Taban Puan": 296.68372,
+          "Tavan Puan": 378.70751
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "İç Mekan Tasarımı",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 260.18642,
+          "Tavan Puan": 331.37557
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "İnşaat Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 52,
+          "Taban Puan": 250.07031,
+          "Tavan Puan": 368.0958
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Kontrol ve Otomasyon Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 256.10587,
+          "Tavan Puan": 290.55006
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Makine",
+          "Puan Türü": "TYT",
+          "Kontenjan": 50,
+          "Yerleşen": 51,
+          "Taban Puan": 267.12765,
+          "Tavan Puan": 362.82026
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Mekatronik",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 273.08239,
+          "Tavan Puan": 296.93198
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Teknik Bilimler Meslek Yüksekokulu",
+          "Program Adı": "Otomotiv Teknolojisi",
+          "Puan Türü": "TYT",
+          "Kontenjan": 45,
+          "Yerleşen": 46,
+          "Taban Puan": 264.4932,
+          "Tavan Puan": 312.87401
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Yeşilova İsmail Akın Turizm Meslek Yüksekokulu",
+          "Program Adı": "Aşçılık",
+          "Puan Türü": "TYT",
+          "Kontenjan": 40,
+          "Yerleşen": 41,
+          "Taban Puan": 272.93559,
+          "Tavan Puan": 338.84436
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Yeşilova İsmail Akın Turizm Meslek Yüksekokulu",
+          "Program Adı": "Turist Rehberliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 35,
+          "Yerleşen": 36,
+          "Taban Puan": 263.06699,
+          "Tavan Puan": 353.3937
+         },
+         {
+          "Program": "Ön lisans",
+          "Fakülte\/Yüksekokul Adı": "Yeşilova İsmail Akın Turizm Meslek Yüksekokulu",
+          "Program Adı": "Turizm ve Otel İşletmeciliği",
+          "Puan Türü": "TYT",
+          "Kontenjan": 30,
+          "Yerleşen": 31,
+          "Taban Puan": 247.68129,
+          "Tavan Puan": 271.13051
+         }
+
+    ];
+
+
+
+    const degreeSelect = document.getElementById("degree");
+    const facultySelect = document.getElementById("faculty");
+    const programSelect = document.getElementById("program");
+
+    degreeSelect.addEventListener("change", function () {
+        facultySelect.innerHTML = '<option value="">-- Seçiniz --</option>';
+        facultySelect.disabled = true;
+        programSelect.innerHTML = '<option value="">-- Önce Fakülte Seçiniz --</option>';
+        programSelect.disabled = true;
+
+        let selectedDegree = this.value;
+
+        if (selectedDegree === "Tüm Programlar") {
+            document.getElementById("infoBox").style.display = "none";
+            let allPrograms = [...new Set(data.map(item => item["Program Adı"]))].sort();
+
+            // Create a temporary div to show only programs
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = '<div class="program-list-container" style="margin-top: 20px;"><h3>Tüm Programlar</h3><ul>' + 
+                allPrograms.map(program => `<li>${program}</li>`).join('') + 
+                '</ul></div>';
+
+            // Replace the entire content with just the programs list
+            document.querySelector('.container').innerHTML = '';
+            document.querySelector('.container').appendChild(document.createElement('h2')).textContent = 'Üniversite Program Arama';
+            document.querySelector('.container').appendChild(tempDiv);
+
+            // Add a back button
+            let backButton = document.createElement('button');
+            backButton.textContent = 'Geri Dön';
+            backButton.onclick = () => location.reload();
+            backButton.style.marginTop = '20px';
+            document.querySelector('.container').appendChild(backButton);
+            return;
+        }
+
+        selectedDegree = selectedDegree.toLowerCase() === "ön lisans" ? "Ön lisans" : selectedDegree;
+        if (selectedDegree) {
+            let faculties = [...new Set(data.filter(item => item.Program === selectedDegree).map(item => item["Fakülte/Yüksekokul Adı"]))];
+            faculties.forEach(faculty => {
+                let option = document.createElement("option");
+                option.value = faculty;
+                option.textContent = faculty;
+                facultySelect.appendChild(option);
+            });
+            facultySelect.disabled = false;
+        }
+    });
+
+    facultySelect.addEventListener("change", function () {
+        programSelect.innerHTML = '<option value="">-- Seçiniz --</option>';
+        programSelect.disabled = true;
+
+        let selectedFaculty = this.value;
+        let selectedDegree = degreeSelect.value;
+        let programs = data.filter(item => item.Program === selectedDegree && item["Fakülte/Yüksekokul Adı"] === selectedFaculty)
+                           .map(item => item["Program Adı"]);
+
+        programs.forEach(program => {
+            let option = document.createElement("option");
+            option.value = program;
+            option.textContent = program;
+            programSelect.appendChild(option);
+        });
+
+        programSelect.disabled = false;
+    });
+
+    function showInfo() {
+        let selectedFaculty = facultySelect.value;
+        let selectedProgram = programSelect.value;
+        let selectedDegree = degreeSelect.value;
+        let programData = data.find(item => item.Program === selectedDegree && item["Fakülte/Yüksekokul Adı"] === selectedFaculty && item["Program Adı"] === selectedProgram);
+
+        if (programData) {
+            document.getElementById("facultyName").textContent = programData["Fakülte/Yüksekokul Adı"];
+            document.getElementById("programName").textContent = programData["Program Adı"];
+            document.getElementById("scoreType").textContent = programData["Puan Türü"];
+            document.getElementById("quota").textContent = programData["Kontenjan"];
+            document.getElementById("placed").textContent = programData["Yerleşen"];
+            document.getElementById("minScore").textContent = programData["Taban Puan"];
+            document.getElementById("maxScore").textContent = programData["Tavan Puan"];
+            document.getElementById("infoBox").style.display = "block";
+        } else {
+            alert("Lütfen geçerli bir program seçin.");
+        }
+    }
+</script>
+
+</body>
+</html>
