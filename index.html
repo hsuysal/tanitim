@@ -10,25 +10,30 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="gradient-bg text-white shadow-lg">
+    <header class="gradient-bg text-white shadow-lg z-10">
         <div class="container mx-auto px-4 py-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-3">
-                    <div class="bg-white p-2 rounded-full text-blue-900">
+                    <div class="bg-white p-2 rounded-full text-blue-900 shadow-lg">
                         <i class="fa-solid fa-graduation-cap text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold">MAKÜ Tercih Robotu</h1>
-                        <p class="text-blue-100 text-sm">2025 YKS Verileri ile Analiz</p>
+                        <h1 class="text-2xl font-bold tracking-tight">MAKÜ Tercih Robotu</h1>
+                        <p class="text-blue-100 text-sm font-light">2025 YKS & YÖK Atlas Verileri</p>
                     </div>
                 </div>
                 <div class="text-right hidden md:block">
-                    <p class="text-sm opacity-90">Burdur Mehmet Akif Ersoy Üniversitesi</p>
+                    <p class="text-sm font-medium opacity-90">Burdur Mehmet Akif Ersoy Üniversitesi</p>
+                    <p class="text-xs text-blue-200">Resmi Veri Analizi</p>
                 </div>
             </div>
         </div>
@@ -42,17 +47,19 @@
             <!-- Sidebar / Filters -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 sticky top-4">
-                    <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">
+                    <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2 flex items-center">
                         <i class="fa-solid fa-filter mr-2 text-blue-600"></i>Filtreler
                     </h2>
 
                     <!-- Puan Türü Seçimi -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Puan Türü</label>
-                        <select id="scoreTypeFilter" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <select id="scoreTypeFilter" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
                             <option value="Tümü">Tümü</option>
                             <option value="SAY">SAY (Sayısal)</option>
                             <option value="EA">EA (Eşit Ağırlık)</option>
+                            <option value="SÖZ">SÖZ (Sözel)</option>
+                            <option value="DİL">DİL (Yabancı Dil)</option>
                             <option value="TYT">TYT (Ön Lisans)</option>
                         </select>
                     </div>
@@ -61,23 +68,25 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Sıralamanız (Örn: 150000)</label>
                         <div class="relative">
-                            <input type="number" id="userRank" placeholder="Sıralama giriniz..." class="w-full p-2.5 pl-9 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
-                            <i class="fa-solid fa-hashtag absolute left-3 top-3.5 text-gray-400"></i>
+                            <input type="number" id="userRank" placeholder="Sıralama giriniz..." class="w-full p-2.5 pl-9 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition text-sm">
+                            <i class="fa-solid fa-hashtag absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">*Kazanma ihtimalini görmek için giriniz.</p>
+                        <p class="text-xs text-gray-500 mt-1 flex items-center">
+                            <i class="fa-solid fa-circle-info mr-1"></i> Kazanma ihtimali için giriniz.
+                        </p>
                     </div>
 
                     <!-- Bölüm Arama -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Bölüm Ara</label>
                         <div class="relative">
-                            <input type="text" id="searchInput" placeholder="Bölüm adı veya MYO..." class="w-full p-2.5 pl-9 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
-                            <i class="fa-solid fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                            <input type="text" id="searchInput" placeholder="Bölüm veya Fakülte..." class="w-full p-2.5 pl-9 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition text-sm">
+                            <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
                     </div>
 
-                    <button onclick="resetFilters()" class="w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition font-medium text-sm">
-                        <i class="fa-solid fa-rotate-right mr-2"></i>Filtreleri Temizle
+                    <button onclick="resetFilters()" class="w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded-lg transition font-medium text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i>Filtreleri Temizle
                     </button>
                 </div>
             </div>
@@ -85,27 +94,34 @@
             <!-- Results -->
             <div class="lg:col-span-3">
                 <!-- Stats Bar -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4 flex justify-between items-center">
-                    <div>
-                        <span class="text-gray-500 text-sm">Listelenen Bölüm:</span>
-                        <span id="resultCount" class="text-blue-600 font-bold text-lg ml-1">0</span>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <div class="flex items-center">
+                        <div class="bg-blue-50 text-blue-600 rounded-lg p-2 mr-3">
+                            <i class="fa-solid fa-list-ul"></i>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-sm block">Listelenen Program</span>
+                            <span id="resultCount" class="text-gray-800 font-bold text-xl">0</span>
+                        </div>
                     </div>
-                    <div class="text-xs text-gray-400">
-                        *2025 Tahmini/Gerçekleşen Veriler
+                    <div class="flex gap-2 text-xs">
+                         <span class="px-2 py-1 rounded bg-green-50 text-green-700 border border-green-100">Yüksek İhtimal</span>
+                         <span class="px-2 py-1 rounded bg-yellow-50 text-yellow-700 border border-yellow-100">Normal</span>
+                         <span class="px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100">Düşük</span>
                     </div>
                 </div>
 
                 <!-- Table Container -->
                 <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider border-b">
-                                    <th class="p-4 font-semibold">Bölüm / Fakülte-MYO</th>
-                                    <th class="p-4 font-semibold w-24">Tür</th>
-                                    <th class="p-4 font-semibold w-32">2025 Puan</th>
-                                    <th class="p-4 font-semibold w-32">2025 Sıralama</th>
-                                    <th class="p-4 font-semibold w-32 text-center">İhtimal</th>
+                                <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b">
+                                    <th class="p-4 font-bold">Bölüm / Fakülte-MYO</th>
+                                    <th class="p-4 font-bold w-20">Tür</th>
+                                    <th class="p-4 font-bold w-28">Taban Puan</th>
+                                    <th class="p-4 font-bold w-32">Başarı Sırası</th>
+                                    <th class="p-4 font-bold w-32 text-center">Durum</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="text-gray-700 text-sm divide-y divide-gray-100">
@@ -114,22 +130,22 @@
                         </table>
                     </div>
                     <!-- Empty State -->
-                    <div id="emptyState" class="hidden p-8 text-center">
-                        <div class="inline-block p-4 rounded-full bg-blue-50 text-blue-400 mb-3">
-                            <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+                    <div id="emptyState" class="hidden p-12 text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 text-gray-300 mb-4">
+                            <i class="fa-solid fa-magnifying-glass text-3xl"></i>
                         </div>
                         <h3 class="text-lg font-medium text-gray-900">Sonuç Bulunamadı</h3>
-                        <p class="text-gray-500">Arama kriterlerinizi değiştirerek tekrar deneyin.</p>
+                        <p class="text-gray-500 mt-1">Arama kriterlerinizi değiştirerek tekrar deneyin.</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-white border-t mt-8 py-6">
-        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>&copy; 2025 MAKÜ Tercih Robotu. Veriler bilgilendirme amaçlıdır.</p>
-            <p class="mt-1 text-xs">Orijinal ÖSYM/YÖK Atlas verileri ile karşılaştırmanız önerilir.</p>
+    <footer class="bg-white border-t mt-8 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm font-medium">&copy; 2025 MAKÜ Tercih Robotu</p>
+            <p class="text-xs text-gray-400 mt-2">Bu uygulama bilgilendirme amaçlıdır. Kesin sonuçlar için ÖSYM kılavuzunu inceleyiniz.</p>
         </div>
     </footer>
 
@@ -155,9 +171,9 @@
             { name: "İlköğretim Matematik Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SAY", score: 304.82, rank: 291600 },
             { name: "Veri Bilimi ve Analitiği", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 297.27, rank: 318900 },
             { name: "Matematik", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 293.09, rank: 335400 },
-            { name: "Bilişim Sistemleri ve Teknolojileri", faculty: "Bucak Zeliha Tolunay U.T.İ.YO", type: "SAY", score: 290.17, rank: 347600 },
+            { name: "Bilişim Sistemleri ve Teknolojileri", faculty: "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu", type: "SAY", score: 290.17, rank: 347600 },
             { name: "Kimya", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 284.27, rank: 374100 },
-            { name: "Bilişim Sistemleri ve Teknolojileri", faculty: "Gölhisar U.B.YO", type: "SAY", score: 284.24, rank: 374300 },
+            { name: "Bilişim Sistemleri ve Teknolojileri", faculty: "Gölhisar Uygulamalı Bilimler Yüksekokulu", type: "SAY", score: 284.24, rank: 374300 },
             { name: "Moleküler Biyoloji ve Genetik", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 283.51, rank: 377700 },
             { name: "Gerontoloji", faculty: "Sağlık Bilimleri Fakültesi", type: "SAY", score: 280.82, rank: 390400 },
             { name: "Biyoloji", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 266.94, rank: 468800 },
@@ -167,19 +183,19 @@
             { name: "Acil Yardım ve Afet Yönetimi", faculty: "Bucak Sağlık Yüksekokulu", type: "SAY", score: 254.26, rank: 560200 },
             { name: "Hassas Tarım ve Tarımsal Robotlar", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 247.83, rank: 616200 },
             { name: "Fen Bilgisi Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SAY", score: 0, rank: 9999999, note: "Dolmadı" },
-            { name: "Nanobilim ve Nanoteknoloji (KKTC)", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 0, rank: 9999999, note: "Dolmadı" },
+            { name: "Nanobilim ve Nanoteknoloji (KKTC Uyruklu)", faculty: "Fen-Edebiyat Fakültesi", type: "SAY", score: 0, rank: 9999999, note: "Dolmadı" },
             
             // EA Data
             { name: "Sınıf Öğretmenliği", faculty: "Eğitim Fakültesi", type: "EA", score: 353.90, rank: 114400 },
             { name: "Rehberlik ve Psikolojik Danışmanlık", faculty: "Eğitim Fakültesi", type: "EA", score: 339.81, rank: 156800 },
-            { name: "Yönetim Bilişim Sistemleri", faculty: "Bucak Zeliha Tolunay U.T.İ.YO", type: "EA", score: 324.36, rank: 216500 },
+            { name: "Yönetim Bilişim Sistemleri", faculty: "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu", type: "EA", score: 324.36, rank: 216500 },
             { name: "Çocuk Gelişimi", faculty: "Bucak Sağlık Yüksekokulu", type: "EA", score: 301.36, rank: 339200 },
             { name: "Sosyal Hizmet", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 286.23, rank: 448400 },
             { name: "Sağlık Yönetimi", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 271.62, rank: 576900 },
             { name: "İşletme", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 270.29, rank: 589800 },
             { name: "Maliye", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 269.64, rank: 596200 },
-            { name: "Tapu Kadastro", faculty: "Gölhisar U.B.YO", type: "EA", score: 269.37, rank: 599000 },
-            { name: "Gümrük İşletme", faculty: "Bucak Zeliha Tolunay U.T.İ.YO", type: "EA", score: 262.20, rank: 672300 },
+            { name: "Tapu Kadastro", faculty: "Gölhisar Uygulamalı Bilimler Yüksekokulu", type: "EA", score: 269.37, rank: 599000 },
+            { name: "Gümrük İşletme", faculty: "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu", type: "EA", score: 262.20, rank: 672300 },
             { name: "Siyaset Bilimi ve Kamu Yönetimi", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 261.28, rank: 682000 },
             { name: "İktisat", faculty: "İktisadi ve İdari Bilimler Fakültesi", type: "EA", score: 260.88, rank: 686400 },
             { name: "İşletme", faculty: "Bucak İşletme Fakültesi", type: "EA", score: 254.18, rank: 759600 },
@@ -187,8 +203,32 @@
             { name: "Spor Yöneticiliği", faculty: "Spor Bilimleri Fakültesi", type: "EA", score: 252.72, rank: 775800 },
             { name: "Turizm İşletmeciliği", faculty: "Turizm Fakültesi", type: "EA", score: 246.42, rank: 848400 },
             { name: "Ekonomi ve Finans", faculty: "Bucak İşletme Fakültesi", type: "EA", score: 245.33, rank: 861000 },
+            { name: "Antropoloji", faculty: "Fen-Edebiyat Fakültesi", type: "EA", score: 247.87, rank: 858940 },
+            { name: "Sosyoloji", faculty: "Fen-Edebiyat Fakültesi", type: "EA", score: 239.30, rank: 973300 },
+            { name: "Muhasebe ve Finans Yönetimi", faculty: "Bucak Zeliha Tolunay Uygulamalı Teknoloji ve İşletmecilik Yüksekokulu", type: "EA", score: 232.25, rank: 1072230 },
+            { name: "Arkeoloji", faculty: "Fen-Edebiyat Fakültesi", type: "EA", score: 227.66, rank: 1137700 },
+            { name: "Felsefe", faculty: "Fen-Edebiyat Fakültesi", type: "EA", score: 226.56, rank: 1153360 },
 
-            // TYT Data (Yeni Eklenenler)
+            // SÖZ Data
+            { name: "Özel Eğitim Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SÖZ", score: 397.77, rank: 8923 },
+            { name: "Okul Öncesi Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SÖZ", score: 373.17, rank: 25126 },
+            { name: "Gastronomi ve Mutfak Sanatları", faculty: "Turizm Fakültesi", type: "SÖZ", score: 334.90, rank: 94003 },
+            { name: "Türkçe Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SÖZ", score: 301.43, rank: 36706 },
+            { name: "Görsel İletişim Tasarımı", faculty: "Sanat ve Tasarım Fakültesi", type: "SÖZ", score: 284.49, rank: 349507 },
+            { name: "Türk Dili ve Edebiyatı", faculty: "Fen-Edebiyat Fakültesi", type: "SÖZ", score: 280.59, rank: 379534 },
+            { name: "Tarih", faculty: "Fen-Edebiyat Fakültesi", type: "SÖZ", score: 271.63, rank: 454663 },
+            { name: "Coğrafya", faculty: "Fen-Edebiyat Fakültesi", type: "SÖZ", score: 268.39, rank: 483433 },
+            { name: "Halkla İlişkiler ve Tanıtım", faculty: "Bucak İşletme Fakültesi", type: "SÖZ", score: 260.84, rank: 553661 },
+            { name: "İlahiyat (M.T.O.K.)", faculty: "İlahiyat Fakültesi", type: "SÖZ", score: 253.27, rank: 626813 },
+            { name: "İlahiyat", faculty: "İlahiyat Fakültesi", type: "SÖZ", score: 244.21, rank: 715437 },
+            { name: "Sosyal Bilgiler Öğretmenliği", faculty: "Eğitim Fakültesi", type: "SÖZ", score: 0, rank: 9999999, note: "Dolmadı" },
+
+            // DİL Data
+            { name: "İngilizce Öğretmenliği", faculty: "Eğitim Fakültesi", type: "DİL", score: 408.92, rank: 18229 },
+            { name: "İngiliz Dili ve Edebiyatı (İngilizce)", faculty: "Fen-Edebiyat Fakültesi", type: "DİL", score: 381.42, rank: 29309 },
+            { name: "İspanyol Dili ve Edebiyatı", faculty: "Fen-Edebiyat Fakültesi", type: "DİL", score: 361.08, rank: 38160 },
+
+            // TYT Data (96 items)
             { name: "Anestezi", faculty: "Burdur SHMYO", type: "TYT", score: 351.25, rank: 389800 },
             { name: "İlk ve Acil Yardım", faculty: "Burdur SHMYO", type: "TYT", score: 349.27, rank: 402300 },
             { name: "İlk ve Acil Yardım", faculty: "Gölhisar SHMYO", type: "TYT", score: 341.03, rank: 459000 },
@@ -303,34 +343,31 @@
             if (!userRank) return null;
             if (deptRank === 9999999) return "Yüksek"; // Dolmadı ise şans yüksek
 
-            // Different logic for EA vs SAY could be applied, but using general percentage
-            // High Chance: User rank is significantly better (lower number) than dept rank
-            // or up to 10% worse than dept rank (optimistic)
-            
             // Logic:
             // If UserRank <= DeptRank * 1.05 -> High (Green)
             // If UserRank <= DeptRank * 1.20 -> Normal (Yellow)
             // If UserRank > DeptRank * 1.20 -> Low (Red)
 
-            // More realistic preference robot logic:
             if (userRank <= deptRank) return "Yüksek";
             if (userRank <= deptRank * 1.15) return "Normal";
             return "Düşük";
         }
 
         function getChanceBadge(status) {
-            if (!status) return '<span class="text-gray-400">-</span>';
-            if (status === "Yüksek") return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><i class="fa-solid fa-check mr-1"></i> Yüksek</span>';
-            if (status === "Normal") return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fa-solid fa-minus mr-1"></i> Normal</span>';
-            return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><i class="fa-solid fa-xmark mr-1"></i> Düşük</span>';
+            if (!status) return '<span class="text-gray-300">-</span>';
+            if (status === "Yüksek") return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700 border border-green-200"><i class="fa-solid fa-check mr-1.5"></i> Yüksek</span>';
+            if (status === "Normal") return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200"><i class="fa-solid fa-minus mr-1.5"></i> Normal</span>';
+            return '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-red-100 text-red-700 border border-red-200"><i class="fa-solid fa-xmark mr-1.5"></i> Düşük</span>';
         }
 
         function getScoreTypeColor(type) {
             switch(type) {
-                case 'SAY': return 'bg-blue-100 text-blue-700';
-                case 'EA': return 'bg-orange-100 text-orange-700';
-                case 'TYT': return 'bg-purple-100 text-purple-700';
-                default: return 'bg-gray-100 text-gray-700';
+                case 'SAY': return 'bg-blue-100 text-blue-700 border border-blue-200';
+                case 'EA': return 'bg-orange-100 text-orange-700 border border-orange-200';
+                case 'TYT': return 'bg-purple-100 text-purple-700 border border-purple-200';
+                case 'SÖZ': return 'bg-pink-100 text-pink-700 border border-pink-200';
+                case 'DİL': return 'bg-rose-100 text-rose-700 border border-rose-200';
+                default: return 'bg-gray-100 text-gray-700 border border-gray-200';
             }
         }
 
@@ -346,9 +383,13 @@
                 return matchesType && matchesSearch;
             });
 
-            // Sort logic: If user rank is entered, keep default order (usually by rank).
-            // Data is already somewhat sorted by Rank descending in the array based on input
-            filteredData.sort((a, b) => a.rank - b.rank);
+            // Sort logic: Default sort by Rank (ascending) to show best departments first (or easier ones depending on perspective, usually Rank asc means harder to get in first)
+            // Actually, for preferences, usually people look at scores. Let's keep it sorted by Rank ASC (Top departments first)
+            filteredData.sort((a, b) => {
+                 if (a.rank === 9999999) return 1; // Put "Dolmadı" at the end
+                 if (b.rank === 9999999) return -1;
+                 return a.rank - b.rank;
+            });
 
             // Update Count
             resultCount.textContent = filteredData.length;
@@ -366,32 +407,32 @@
             // Populate Table
             filteredData.forEach(item => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-blue-50 transition border-b border-gray-100 last:border-0";
+                row.className = "hover:bg-blue-50/60 transition border-b border-gray-100 last:border-0";
                 
-                const rankDisplay = item.note === "Dolmadı" ? "<span class='text-orange-500 italic'>Dolmadı</span>" : formatNumber(item.rank);
+                const rankDisplay = item.note === "Dolmadı" ? "<span class='text-orange-500 italic font-medium'><i class='fa-regular fa-circle-xmark mr-1'></i>Dolmadı</span>" : formatNumber(item.rank);
                 const scoreDisplay = item.score === 0 ? "-" : item.score.toFixed(2);
                 
                 const chance = calculateChance(item.rank, item.type, userRank);
                 const chanceBadge = getChanceBadge(chance);
                 const typeClass = getScoreTypeColor(item.type);
 
-                // Highlight row if high chance
+                // Highlight row if high chance (subtle)
                 if (chance === "Yüksek") {
-                    row.classList.add("bg-green-50/50");
+                    row.classList.add("bg-green-50/30");
                 }
 
                 row.innerHTML = `
                     <td class="p-4">
-                        <div class="font-semibold text-gray-900">${item.name}</div>
-                        <div class="text-xs text-gray-500">${item.faculty}</div>
+                        <div class="font-bold text-gray-900">${item.name}</div>
+                        <div class="text-xs text-gray-500 mt-0.5"><i class="fa-regular fa-building mr-1"></i>${item.faculty}</div>
                     </td>
                     <td class="p-4">
-                        <span class="inline-block px-2 py-1 text-xs font-bold rounded ${typeClass}">
+                        <span class="inline-block px-2.5 py-0.5 text-xs font-bold rounded-full ${typeClass}">
                             ${item.type}
                         </span>
                     </td>
-                    <td class="p-4 font-mono text-gray-600">${scoreDisplay}</td>
-                    <td class="p-4 font-mono font-medium text-gray-800">${rankDisplay}</td>
+                    <td class="p-4 font-mono text-gray-600 font-medium">${scoreDisplay}</td>
+                    <td class="p-4 font-mono font-bold text-gray-800">${rankDisplay}</td>
                     <td class="p-4 text-center">${chanceBadge}</td>
                 `;
                 tableBody.appendChild(row);
